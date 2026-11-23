@@ -21,8 +21,8 @@
         }
         #terminal {
             white-space: pre;
-            font-size: min(2.5vw, 12px);
-            line-height: 1.1;
+            font-size: min(2.2vw, 11px);
+            line-height: 1.05;
             text-align: center;
         }
     </style>
@@ -84,7 +84,6 @@
             return [p[0]+d[0]*k, p[1]+d[1]*k, p[2]+d[2]*k];
         }
 
-        // Pseudo-random com semente fixa
         let seedVal = 21;
         function rnd() {
             let x = Math.sin(seedVal++) * 10000;
@@ -212,14 +211,13 @@
 
         function ansiToHex(code) {
             if (code === 231 || code === 255) return '#fff';
-            if (code === 238) return '#444';
-            // Mapeamento básico para as cores de azul e amarelo utilizadas
-            if (code >= 220 && code <= 230) return '#ffe600'; // Amarelo da mensagem
+            if (code === 238) return '#666';
+            if (code >= 220 && code <= 230) return '#ffe600';
             if (code >= 38 && code <= 51 || code >= 116 && code <= 123) return '#38bdf8';
             if (code >= 25 && code <= 33) return '#0284c7';
             if (code >= 17 && code <= 21) return '#0369a1';
-            if (code >= 22 && code <= 114) return '#22c55e'; // Verdes
-            if (code >= 101 && code <= 231) return '#cbd5e1'; // Papel
+            if (code >= 22 && code <= 114) return '#22c55e';
+            if (code >= 101 && code <= 231) return '#cbd5e1';
             return '#38bdf8';
         }
 
@@ -227,9 +225,8 @@
             let now = (performance.now() - startTime) / 1000;
             let dt = 1 / FPS;
 
-            // Calcula colunas e linhas dinâmicas para caber perfeitamente no celular
-            let cols = 64;
-            let rows = 40;
+            let cols = 70;
+            let rows = 44;
 
             let chars = Array.from({length: rows}, () => Array(cols).fill(' '));
             let colors = Array.from({length: rows}, () => Array(cols).fill(0));
@@ -266,7 +263,7 @@
             }
 
             function plot(col, row, z, ch, color) {
-                if (row >= 0 && row < view_rows && col >= 0 && col < cols && z > zbuf[row][col]) {
+                if (row >= 0 && row < rows && col >= 0 && col < cols && z > zbuf[row][col]) {
                     zbuf[row][col] = z;
                     chars[row][col] = ch;
                     colors[row][col] = color;
@@ -349,8 +346,8 @@
                 else if (tw > 0.0) plot(col, row, zt, "·", 218);
             });
 
-            // Mensagem principal amarela na parte inferior
-            let mrow = rows - 3;
+            // Mensagem principal amarela na parte inferior garantida
+            let mrow = rows - 2;
             let start = Math.max(0, Math.floor((cols - MESSAGE.length) / 2));
             let shift = Math.floor(now * 6);
             for (let i = 0; i < MESSAGE.length; i++) {
@@ -360,8 +357,8 @@
                 }
             }
 
-            // Frase secundária
-            let hrow = rows - 2;
+            // Frase secundária bem no rodapé
+            let hrow = rows - 1;
             let hstart = Math.max(0, Math.floor((cols - HINT.length) / 2));
             for (let i = 0; i < HINT.length; i++) {
                 if (hstart + i < cols) {
@@ -370,7 +367,6 @@
                 }
             }
 
-            // Constrói o HTML final gerando tags span coloridas
             let htmlLines = [];
             for (let r = 0; r < rows; r++) {
                 let lineHtml = "";
